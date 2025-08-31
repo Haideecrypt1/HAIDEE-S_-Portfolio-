@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haidee_ Portfolio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f8f8;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+    }
+    header img {
+      width: 60px;
+      border-radius: 50%;
+    }
+    h1 {
+      margin: 10px 0 5px;
+
+    }
+    h2 {
+      margin-top: 40px;
+    }
+    #gameContainer {
+      margin: 20px auto;
+      width: 420px;
+    }
+    canvas {
+      background: #111;
+      display: block;
+      margin: 0 auto;
+      border: 3px solid #444;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #222;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="your-logo.png" alt="Logo">
+    <h1>Haidee_</h1>
+    <p>Game & Web Developer</p>
+  </header>
+
+  <section>
+    <h2>Snake Game</h2>
+    <div id="gameContainer">
+      <canvas id="gameCanvas" width="400" height="400"></canvas>
+      <div>
+        <button onclick="startGame()">Start / Restart</button>
+      </div>
+      <p id="score">Score: 0</p>
+    </div>
+  </section>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const box = 20;
+    let snake, food, dx, dy, score, game;
+
+    function initGame() {
+      snake = [{x: 9 * box, y: 10 * box}];
+      dx = box;
+      dy = 0;
+      food = {
+        x: Math.floor(Math.random() * 19) * box,
+        y: Math.floor(Math.random() * 19) * box
+      };
+      score = 0;
+      document.getElementById("score").textContent = "Score: " + score;
+    }
+
+    function drawGame() {
+      ctx.fillStyle = "#111";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw snake
+      for (let i = 0; i < snake.length; i++) {
+        ctx.fillStyle = i === 0 ? "lime" : "white";
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+        ctx.strokeStyle = "#111";
+        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+      }
+
+      // Draw food
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x, food.y, box, box);
+
+      // Move snake
+      let headX = snake[0].x + dx;
+      let headY = snake[0].y + dy;
+
+      // Game over conditions
+      if (headX < 0  headY < 0  headX >= canvas.width  headY >= canvas.height  collision(headX, headY, snake)) {
+        clearInterval(game);
+        alert("Game Over! Your score: " + score);
+        return;
+      }
+
+      let newHead = {x: headX, y: headY};
+
+      // Eat food
+      if (headX === food.x && headY === food.y) {
+        score++;
+        document.getElementById("score").textContent = "Score: " + score;
+        food = {
+          x: Math.floor(Math.random() * 19) * box,
+          y: Math.floor(Math.random() * 19) * box
+        };
+      } else {
+        snake.pop();
+      }
+
+      snake.unshift(newHead);
+    }
+
+    function collision(x, y, array) {
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].x === x && array[i].y === y) return true;
+      }
+      return false;
+    }
+
+    function startGame() {
+      clearInterval(game);
+      initGame();
+      game = setInterval(drawGame, 100);
+    }
+
+    document.addEventListener("keydown", direction);
+
+    function direction(event) {
+      if (event.key === "ArrowLeft" && dx === 0) {
+        dx = -box; dy = 0;
+      } else if (event.key === "ArrowUp" && dy === 0) {
+        dx = 0; dy = -box;
+      } else if (event.key === "ArrowRight" && dx === 0) {
+        dx = box; dy = 0;
+      } else if (event.key === "ArrowDown" && dy === 0) {
+        dx = 0; dy = box;
+      }
+    }
+  </script>
+</body>
+</html>
