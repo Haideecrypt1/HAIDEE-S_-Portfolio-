@@ -24,7 +24,6 @@
     }
     h1 {
       margin: 10px 0 5px;
-
     }
     h2 {
       margin-top: 40px;
@@ -111,7 +110,7 @@
       let headY = snake[0].y + dy;
 
       // Game over conditions
-      if (headX < 0  headY < 0  headX >= canvas.width  headY >= canvas.height  collision(headX, headY, snake)) {
+      if (headX < 0 || headY < 0 || headX >= canvas.width || headY >= canvas.height || collision(headX, headY, snake)) {
         clearInterval(game);
         alert("Game Over! Your score: " + score);
         return;
